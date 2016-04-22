@@ -1,0 +1,8 @@
+#NOTE: This is an internal implementation file, its format can be changed without prior notice.
+#Wed Mar 25 14:45:20 CET 2015
+default-http\://people.apache.org/repo/m2-incubating-repository/.lastUpdated=1427291100361
+default-http\://repo.maven.apache.org/maven2/.lastUpdated=1427291120426
+http\://annolab.org/m2/releases/.error=Could not transfer artifact org.annolab.tt4j\:org.annolab.tt4j\:pom\:1.0.16 from/to annolab (http\://annolab.org/m2/releases/)\: connection timed out to http\://annolab.org/m2/releases/org/annolab/tt4j/org.annolab.tt4j/1.0.16/org.annolab.tt4j-1.0.16.pom
+http\://repo.maven.apache.org/maven2/.error=Could not transfer artifact org.annolab.tt4j\:org.annolab.tt4j\:pom\:1.0.16 from/to central (http\://repo.maven.apache.org/maven2)\: connection timed out to http\://repo.maven.apache.org/maven2/org/annolab/tt4j/org.annolab.tt4j/1.0.16/org.annolab.tt4j-1.0.16.pom
+http\://people.apache.org/repo/m2-incubating-repository/.error=Could not transfer artifact org.annolab.tt4j\:org.annolab.tt4j\:pom\:1.0.16 from/to apache (http\://people.apache.org/repo/m2-incubating-repository)\: connection timed out to http\://people.apache.org/repo/m2-incubating-repository/org/annolab/tt4j/org.annolab.tt4j/1.0.16/org.annolab.tt4j-1.0.16.pom
+default-http\://annolab.org/m2/releases/.lastUpdated=1427291110384
