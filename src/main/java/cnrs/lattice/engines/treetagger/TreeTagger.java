@@ -15,7 +15,7 @@ public class TreeTagger {
 
 	private static String TTLEMME = "";
 	private static String TTPOS = "";
-	private static String TREETAGGER_HOME = "/home/gael/Documents/EN_Term/TreeTagger";
+	private static String TREETAGGER_HOME = "";
 	
 	/**
 	 * Apply TreeTagger in order to predict for each word, its lemma and part of speech.
@@ -26,7 +26,8 @@ public class TreeTagger {
 	 * @throws TreeTaggerException
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public static HashMap<String, String[]> lemmatiserTT(HashMap<String, String> map) throws IOException, TreeTaggerException{
+	public static HashMap<String, String[]> lemmatiserTT(HashMap<String, String> map, String tthome) throws IOException, TreeTaggerException{
+	TREETAGGER_HOME = tthome;
 	System.setProperty("treetagger.home",
 				TREETAGGER_HOME);
 	TreeTaggerWrapper tt = new TreeTaggerWrapper<String>();

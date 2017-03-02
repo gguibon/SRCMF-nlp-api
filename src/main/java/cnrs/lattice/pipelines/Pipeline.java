@@ -39,6 +39,7 @@ public class Pipeline {
 	private static String mateTestSet = "";
 	private static String mateModelPath = "";
 	private static String mateOutput = "";
+	private static String TREETAGGER_HOME = "";
 	
 	private static String uas = "";
 	private static String las = "";
@@ -76,6 +77,12 @@ public class Pipeline {
 	 * 
 	 */
 	
+	
+	public Pipeline setTreeTaggerHome(String tthome) throws Exception {
+		this.TREETAGGER_HOME = tthome;
+		System.out.println("TreeTagger home set to : " + tthome);
+		return this;
+	}
 	
 	public Pipeline setConllContent1(String conllPath) throws Exception{
 		System.out.printf("Input 1 : %s\n", conllPath);
@@ -200,17 +207,37 @@ public class Pipeline {
 		return this;
 	}
 	
+	public Pipeline checkData1() throws Exception{
+		Fixer.CheckData(this.conll1);
+		return this;
+	}
+	
+	public Pipeline checkData2() throws Exception{
+		Fixer.CheckData(this.conll2);
+		return this;
+	}
+	
 	public Pipeline fixParseError() throws Exception{
 		System.out.format("\n\n%s\t%s\n","Correction des erreurs de parsing", Tools.time());
-		this.conll1 = Fixer.CorrectionParseID(conll1);
+		this.conll1 = Fixer.CorrectionParseID(this.conll1);
+		return this;
+	}
+	
+	public Pipeline fixParseError2() throws Exception{
+		System.out.format("\n\n%s\t%s\n","Correction des erreurs de parsing", Tools.time());
+		this.conll2 = Fixer.CorrectionParseID(this.conll2);
 		return this;
 	}
 	
 	public Pipeline syntacticFixer()throws Exception{
-		this.conll1 = Fixer.fixSyntaxDuplicataAndAnnotatorTag(conll1, 11);
+		this.conll1 = Fixer.fixSyntaxDuplicataAndAnnotatorTag(this.conll1, 11);
 		return this;
 	}
 	
+	public Pipeline syntacticFixer2()throws Exception{
+		this.conll2 = Fixer.fixSyntaxDuplicataAndAnnotatorTag(this.conll2, 11);
+		return this;
+	}
 	
 	public Pipeline epurationLemmes() throws Exception{
 		System.out.format("\n\n%s\t%s\n", "Epuration des lemmes" , Tools.time());
@@ -231,24 +258,44 @@ public class Pipeline {
 		return this;
 	}
 	
+	public Pipeline epurationLemmes2() throws Exception{
+		System.out.format("\n\n%s\t%s\n", "Epuration des lemmes" , Tools.time());
+		HashMap<String, String> mapIdLemma = Corpus.getMapIdValue(this.conll2, 0, 3);
+		int total = mapIdLemma.size();
+		int current = 0;
+		Iterator it = mapIdLemma.entrySet().iterator();
+		while(it.hasNext()){
+			current++;
+			Tools.printProgress(total, current);
+			Entry entry = (Entry) it.next();
+			String value = (String) entry.getValue();
+			String[] values = value.split("_");
+			String key = entry.getKey().toString();
+			mapIdLemma.put(key, values[0]);
+		}
+		this.conll2 = Corpus.putValueInConll(this.conll2, mapIdLemma, 3, false);
+		return this;
+	}
+	
+	
 	public Pipeline injectPosXmlTei() throws Exception{
 		System.out.format("\n\n%s\t%s\n","Injection des POS du XML TEI", Tools.time());
 		HashMap<String, String> mapIdPos = Corpus.parseTeiXml(xmlPath);
-		this.conll1 = Corpus.putValueInConll(conll1, mapIdPos, 5, true);
+		this.conll1 = Corpus.putValueInConll(this.conll1, mapIdPos, 5, true);
 		return this;
 	}
 
 	public Pipeline injectPosTigerXml() throws Exception{
 		System.out.format("\n\n%s\t%s\n","Injection des POS du Tiger XML", Tools.time());
 		HashMap<String, String> mapIdPos = Corpus.parseTigerXml(xmlPath, "//t");
-		this.conll1 = Corpus.putValueInConll(conll1, mapIdPos, 5, false);
+		this.conll1 = Corpus.putValueInConll(this.conll1, mapIdPos, 5, false);
 		return this;
 	}
 	
-	public Pipeline injectPosTreeTaggerPosLemma() throws Exception{
+	public Pipeline injectPosTreeTaggerPosLemma1() throws Exception{
 		System.out.format("\n\n%s\t%s\n","Prédiction et injection des POS et lemmes de TreeTagger", Tools.time());
 		HashMap<String, String[]> map = TreeTagger.lemmatiserTT(
-				Corpus.getMapIdValue(conll1,0,2)
+				Corpus.getMapIdValue(this.conll1,0,2), TREETAGGER_HOME
 				);
 		HashMap<String, String> mapLemmes = new HashMap<String, String>();
 		HashMap<String, String> mapPos = new HashMap<String, String>();
@@ -260,9 +307,32 @@ public class Pipeline {
 			mapLemmes.put(key, values[0]);
 			mapPos.put(key, values[1]);
 		}
-		String conllLemmes = Corpus.putValueInConll(conll1, mapLemmes, 3, false);
+		String conllLemmes = Corpus.putValueInConll(this.conll1, mapLemmes, 3, false);
 		String conllTTpos = Corpus.putValueInConll(conllLemmes, mapPos, 4, false);
 		this.conll1 = conllTTpos;
+		
+		return this;
+	}
+	
+	
+	public Pipeline injectPosTreeTaggerPosLemma2() throws Exception{
+		System.out.format("\n\n%s\t%s\n","Prédiction et injection des POS et lemmes de TreeTagger", Tools.time());
+		HashMap<String, String[]> map = TreeTagger.lemmatiserTT(
+				Corpus.getMapIdValue(this.conll2,0,2), TREETAGGER_HOME
+				);
+		HashMap<String, String> mapLemmes = new HashMap<String, String>();
+		HashMap<String, String> mapPos = new HashMap<String, String>();
+		Iterator it = map.entrySet().iterator();
+		while (it.hasNext()){
+			Entry entry = (Entry) it.next();
+			String[] values = (String[]) entry.getValue();
+			String key = entry.getKey().toString();
+			mapLemmes.put(key, values[0]);
+			mapPos.put(key, values[1]);
+		}
+		String conllLemmes = Corpus.putValueInConll(this.conll2, mapLemmes, 3, false);
+		String conllTTpos = Corpus.putValueInConll(conllLemmes, mapPos, 4, false);
+		this.conll2 = conllTTpos;
 		
 		return this;
 	}
@@ -283,18 +353,18 @@ public class Pipeline {
 	
 	public Pipeline trainWapiti() throws Exception{
 		System.out.format("\n\n%s\t%s\n","Entrainement Wapiti", Tools.time());
-		File template = new File(wapitiTemplatePath);
-		File trainingData = new File(Tools.tempFile("wapitidata", ".wapiti", wapitiInput));
-		File outputModel = new File(wapitiModelPath);
-		WapitiModel.train(template, trainingData, outputModel, wapitiParams);
+		File template = new File(this.wapitiTemplatePath);
+		File trainingData = new File(Tools.tempFile("wapitidata", ".wapiti", this.wapitiInput));
+		File outputModel = new File(this.wapitiModelPath);
+		WapitiModel.train(template, trainingData, outputModel, this.wapitiParams);
 		return this;
 	}
 	
 	public Pipeline testWapiti() throws Exception{
 		System.out.format("\n\n%s\t%s\n","Etiquetage Wapiti", Tools.time());
-		File outputModel = new File(wapitiModelPath);
+		File outputModel = new File(this.wapitiModelPath);
 		WapitiModel w = new WapitiModel(outputModel);
-		this.wapitiOutput = w.label(wapitiTest);
+		this.wapitiOutput = w.label(this.wapitiTest);
 		return this;
 	}
 	
@@ -306,9 +376,9 @@ public class Pipeline {
 	
 	public Pipeline formatMateGold() throws Exception{
 		System.out.format("\n\n%s\t%s\n","Mise au format Mate avec Gold Pos", Tools.time());
-		List<Word> words = new Reader().readConll(conll1);
+		List<Word> words = new Reader().readConll(this.conll1);
 		Writer writer = new Writer();
-		mateTrainSet = writer.toMateGoldPOS(words);
+		this.mateTrainSet = writer.toMateGoldPOS(words);
 		return this;
 	}
 	
@@ -323,9 +393,9 @@ public class Pipeline {
 	 */
 	public Pipeline formatMatePPos() throws Exception{
 		System.out.format("\n\n%s\t%s\n","Mise au format Mate avec PPos", Tools.time());
-		List<Word> wordsMateGold = new Reader().readConll(conll2);
+		List<Word> wordsMateGold = new Reader().readConll(this.conll2);
 		String mate = new Writer().toMateWapitiPPOS(wordsMateGold);
-		String mateTestSetPPOS = Format.POSWapitiToMate(mate, wapitiOutput);//mateTrainSet
+		String mateTestSetPPOS = Format.POSWapitiToMate(mate, this.wapitiOutput);//mateTrainSet
 		List<Word> wordsMatePpos = new Reader().readMate(mateTestSetPPOS);
 		Writer writer = new Writer();
 		this.mateTestSet = writer.toMateWapitiPPOS(wordsMatePpos);
@@ -334,7 +404,7 @@ public class Pipeline {
 	
 	public Pipeline trainMate() throws Exception{
 		System.out.format("\n\n%s\t%s\n","Entrainement de l'analyseur syntaxique avec Mate", Tools.time());
-		String[] arguments = {"-model", mateModelPath, "-train", Tools.tempFile("trainSet", ".mate", mateTrainSet)};
+		String[] arguments = {"-model", this.mateModelPath, "-train", Tools.tempFile("trainSet", ".mate", this.mateTrainSet)};
 		Parser.main(arguments);
 		return this;
 	}
@@ -342,7 +412,7 @@ public class Pipeline {
 	public Pipeline testMate() throws Exception{
 		System.out.format("\n\n%s\t%s\n","Analyse syntaxique avec Mate", Tools.time());
 		String outPath = Tools.tempFile("output", ".mate", mateOutput);
-		String[] arguments = {"-model", mateModelPath, "-test", Tools.tempFile("testSet", ".mate", mateTestSet),
+		String[] arguments = {"-model", this.mateModelPath, "-test", Tools.tempFile("testSet", ".mate", this.mateTestSet),
 				 "-out", outPath};
 		Parser.main(arguments);
 		this.mateOutput = Tools.readFile(outPath);
@@ -422,8 +492,9 @@ public class Pipeline {
 	}
 	
 	public Pipeline exportMateOutput(String path) throws Exception{
-		System.out.format("\n\n%s\t%s\t%s\n","Export de la sortie de Mate", path , Tools.time());
-		Tools.ecrire(path, mateOutput);
+		String pathFixed = path.replaceAll("//", "/");
+		System.out.format("\n\n%s\t%s\t%s\n","Export de la sortie de Mate V1.3", pathFixed , Tools.time());
+		Tools.ecrire(pathFixed, mateOutput);
 		return this;
 	}
 }

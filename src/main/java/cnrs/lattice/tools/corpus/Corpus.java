@@ -47,25 +47,25 @@ public class Corpus {
 		File fichier = new File(path);
 		BufferedReader lecteur = new BufferedReader(new FileReader(fichier));
 		String texte = lecteur.toString();
-		String phrase = "";
+		StringBuilder phrase = new StringBuilder();
 		List<String> phrases = new ArrayList<String>();
 
 		while ((texte = lecteur.readLine()) != null) {
 			if (texte.length() == 0) {
-				phrases.add(phrase);
-				phrase = "";
+				phrases.add(phrase.toString());
+				phrase = new StringBuilder();
 				continue;
 			}
-			phrase += texte + "\n";
+			phrase.append( texte + "\n" );
 		}
 		lecteur.close();
 
 		System.out.println("Nombre de phrases/clauses : " + phrases.size());
-		String melange = "";
+		StringBuilder melange = new StringBuilder();
 		Tools.shuffleList(phrases);
 		for (String ele : phrases)
-			melange += ele + "\n";
-		return melange;
+			melange.append( ele + "\n" );
+		return melange.toString();
 	}
 
 	/**

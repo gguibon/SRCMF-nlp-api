@@ -541,6 +541,27 @@ public class Fixer {
 				lecteur2.close();
 			}
 	
+	
+	/**
+	 * correction dependency issue
+	 * @throws Exception 
+	 * 
+	 * @throws JDOMException
+	 */
+	public static void CheckData(String conll) throws Exception {		
+		for(String sent : Corpus.getSentences(Tools.tempFile("check", ".temp", conll))){
+			List<String> lines = Tools.StringToList(sent);
+			int valueMax = lines.size() ;
+			for(String line : lines){
+				String[] cols = line.split("\t");
+				if(Integer.parseInt(cols[9]) > valueMax){
+//					System.out.println(line);
+					System.exit(0);
+				}
+			}
+		}
+	}
+	
 	/**
 	 * Corrige les redondance de combinaison d'étiquettes syntaxiques.
 	 * Ex: "RelNC_RelNC_Obj_RelNC" devient "RelNC_Obj"

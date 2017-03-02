@@ -5,6 +5,7 @@ import java.io.IOException;
 import com.google.common.base.Stopwatch;
 
 import cnrs.lattice.pipelines.Pipeline;
+import cnrs.lattice.tools.corpus.Fixer;
 import cnrs.lattice.tools.utils.Tools;
 
 public class OneOnOne {
@@ -66,6 +67,8 @@ public class OneOnOne {
 		String trainWapiti = Pipeline.create()
 				.setConllContent1(conllCompletPath1)
 				.fixParseError()
+				.syntacticFixer()
+				.syntacticFixer()
 				.epurationLemmes()
 				.formatWapiti()
 				.getWapitiInput()
@@ -74,6 +77,8 @@ public class OneOnOne {
 		String testWapiti = Pipeline.create()
 				.setConllContent1(conllCompletPath2)
 				.fixParseError()
+				.syntacticFixer()
+				.syntacticFixer()
 				.epurationLemmes()
 				.formatWapiti()
 				.getWapitiInput()
@@ -84,11 +89,15 @@ public class OneOnOne {
 		
 		String template = new Tools().accessRessourceFile(TEMPLATE);
 		String templatePath = Tools.tempFile("template", "", template);// /resources/template_tlt ou /template_tlt
-
 		
 		Pipeline.create()
 				.setConllContent1(conllCompletPath1)
 				.setConllContent2(conllCompletPath2)
+				.fixParseError()
+				.syntacticFixer()
+				.syntacticFixer2()
+				.epurationLemmes()
+				.epurationLemmes2()
 				.setWapitiInput(trainWapiti)
 				.setWapitiTest(testWapiti)
 				.setWapitiModel(wapitiModelPath)
@@ -128,6 +137,9 @@ public class OneOnOne {
 		String trainWapiti = Pipeline.create()
 				.setConllContent1(conllCompletPath1)
 				.fixParseError()
+				.syntacticFixer()
+				.checkData1()
+//				.injectPosTreeTaggerPosLemma()
 				.epurationLemmes()
 				.formatWapiti()
 				.getWapitiInput()
@@ -142,6 +154,9 @@ public class OneOnOne {
 				.setConllContent1(conllCompletPath1)
 				.fixParseError()
 				.epurationLemmes()
+				.syntacticFixer()
+				.syntacticFixer()
+				.checkData1()
 				.setWapitiInput(trainWapiti)
 				.setWapitiModel(wapitiModelPath)
 				.setWapitiTemplate(templatePath)
@@ -176,6 +191,10 @@ private OneOnOne runTest() throws IOException, Exception{
 		String testWapiti = Pipeline.create()
 				.setConllContent1(conllCompletPath2)
 				.fixParseError()
+				.syntacticFixer()
+				.syntacticFixer()
+				.checkData1()
+				.injectPosTreeTaggerPosLemma1()
 				.epurationLemmes()
 				.formatWapiti()
 				.getWapitiInput()
@@ -188,6 +207,12 @@ private OneOnOne runTest() throws IOException, Exception{
 		
 		Pipeline.create()
 				.setConllContent2(conllCompletPath2)
+				.fixParseError2()
+				.injectPosTreeTaggerPosLemma2()
+				.epurationLemmes2()
+				.syntacticFixer2()
+				.syntacticFixer2()
+				.checkData2()
 				.setWapitiTest(testWapiti)
 				.setWapitiModel(wapitiModelPath)
 				.setWapitiTemplate(templatePath)

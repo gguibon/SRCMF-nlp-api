@@ -54,7 +54,7 @@ public class LakmeLaunch {
 		content = Tools.remplaceColValue(content, "_", 3);
 		content = Tools.remplaceColValue(content, "_", 5);
 		content = Pipeline.create().setConllContent1(Tools.tempFile("temp", ".tp", content))
-				.injectPosTreeTaggerPosLemma().epurationLemmes().getConllContent1();
+				.injectPosTreeTaggerPosLemma1().epurationLemmes().getConllContent1();
 		Tools.ecrire("temp", content);
 		String matemodel = "/home/gael/Documents/SRCMF/PostTLT2015/Lakme/Otinel/otinelGoldPOSLemma/models/petit.mategoldmodel";
 		String wapitimodel = "/home/gael/Documents/SRCMF/PostTLT2015/Lakme/Otinel/otinelGoldPOSLemma/models/petit.wapitimodel";

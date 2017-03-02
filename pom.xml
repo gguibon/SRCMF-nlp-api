@@ -3,7 +3,7 @@
   <groupId>cnrs.lattice</groupId>
   <artifactId>srcmf-nlp</artifactId>
   <packaging>jar</packaging>
-  <version>1.0.3-SNAPSHOT</version>
+  <version>1.0.5-SNAPSHOT</version>
   <name>srcmf-nlp</name>
   <description>This project summarize the main tools to use the SRCMF for NLP purposes</description>
   <organization>

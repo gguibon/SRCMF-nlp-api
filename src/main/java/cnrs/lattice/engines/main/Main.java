@@ -1,5 +1,8 @@
 package cnrs.lattice.engines.main;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -7,12 +10,12 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
-import com.google.common.base.Stopwatch;
-
-import cnrs.lattice.engines.cli.CLI1on1;
 import cnrs.lattice.engines.eval.Eval;
+import cnrs.lattice.tools.corpus.Corpus;
 import cnrs.lattice.tools.corpus.Fixer;
 import cnrs.lattice.tools.utils.Tools;
+
+import com.google.common.base.Stopwatch;
 
 
 public class Main {
@@ -28,13 +31,30 @@ public class Main {
 	private static String dir = "";
 	private static String xml = "";
 	private static boolean tiger = false;
+	private static String tthome = "";
 	private static String input = "";
 	private static int actual = 0;
 	private static int predicted = 0;
+	private static String column = "";
+	private static String matcher = "";
 	
 	public static void main(String[] args) throws Exception {
+//		
+//		StringBuilder sb = new StringBuilder();
+//		for(String line : Tools.StringToList(Tools.readFile("/home/gael/legier.conll")) ){
+//			if(line.length() == 0){
+//				sb.append("\n");
+//				continue;
+//			}
+//				String[] cols = line.split("\t");
+//				if(cols.length < 2) System.out.println(line);
+//				sb.append( cols[1] + "\t" + cols[2] + "\t_\t_\t_\t_\t_\t_\t_\t_\t_\t_\t_\t_\t_\t_\n");
+//		}
+//		Tools.ecrire("/home/gael/legier_empty.conll", sb.toString());
 		
 		
+		
+//		System.exit(0);
 		
 //		String res = Corpus.parseTeiXmlLakmeGPosGLemma("/home/gael/Documents/SRCMF/PostTLT2015/Lakme/Otinel/otinelGoldPOSLemma/Mende_token_num_pos.xml");
 //		Tools.ecrire("temp", res);
@@ -59,7 +79,7 @@ public class Main {
 			OneOnOne.launcher(mode, train, test, output, template, wapitimodel, matemodel);
 			break;
 		case "corpus":
-			Prepa.launcher(dir, xml, output, tiger);
+			Prepa.launcher(dir, xml, output, tiger, tthome);
 			break;
 		case "eval":
 			String str = Eval.getAccuracy(actual, predicted, input);
@@ -75,6 +95,10 @@ public class Main {
 			Tools.ecrire(output, content);
 			System.out.println(stopwatch);
 			stopwatch.stop();
+			break;
+		case "subcorpus":
+			String subcorpus = Corpus.getSubCorpus(input, matcher, Integer.parseInt(column));
+			Tools.ecrire(output, subcorpus);
 			break;
 		}
 //		
@@ -151,6 +175,11 @@ public class Main {
 				Options optionsFix = cnrs.lattice.engines.cli.CLIFix.parseCli();
 				accessCLIFix(args, optionsFix);
 				break;
+			case "subcorpus":
+				mode = args[0];
+				Options optionsCorpus = cnrs.lattice.engines.cli.CLICorpus.parseCli();
+				accessCLICorpus(args, optionsCorpus);
+				break;
 			default:
 				System.out.println("You need to specify a mode\n" + help);
 				formatter.printHelp( "ant", options );
@@ -223,7 +252,7 @@ public class Main {
 				+ "Initially made for SRCMF purposes."
 				+ "Please use the -help option in order to use the SRCMF-NLP :\n\n"
 				+ "USAGE EXAMPLE:\n"
-				+ "java -Xmx6G -jar srcmf.jar 1on1 -train /path/to/train -test /path/to/test -out /path/to/out";
+				+ "java -Xmx6G -jar srcmf.jar corpus -dir /path/to/dirOfConll -xml /path/to/file.xml -out /path/to/out -tthome /path/to/treetagger_install_dir";
 		CommandLineParser parser = new DefaultParser();
 		CommandLine line = parser.parse( options, args);
 		
@@ -241,6 +270,12 @@ public class Main {
 		}
 		if(line.hasOption("tiger")){
 			tiger = true;
+		}
+		if(line.hasOption("tthome")){
+			tthome = line.getOptionValue("tthome");
+		}
+		if(line.hasOption("out")){
+			output = line.getOptionValue("out");
 		}
 	}
 	
@@ -315,7 +350,47 @@ public class Main {
 			output = line.getOptionValue("out");
 		}
 	}
+
 	
+	/**
+	 * access sub command line parsing for cli command
+	 * @param line
+	 * @param options
+	 * @throws ParseException 
+	 */
+	private static void accessCLICorpus(String[] args, Options options) throws ParseException{
+		HelpFormatter formatter = new HelpFormatter();
+		String help = "\n\n"
+//				+ dauphin
+				+ "SRCMF-NLP\n\n"
+				+ "By Gaël Guibon \t"
+				+ "gael.guibon at gmail dot com\n\n"
+				+ "Initially made for SRCMF purposes."
+				+ "Please use the -help option in order to use the SRCMF-NLP :\n\n"
+				+ "USAGE EXAMPLE:\n"
+				+ "java -Xmx6G -jar srcmf.jar fix -in /path/to/in -out /path/to/out";
+		
+		CommandLineParser parser = new DefaultParser();
+		CommandLine line = parser.parse( options, args);
+		if((line.getOptions().length == 0)||(line.hasOption("help"))){
+			System.out.println(help);
+			formatter.printHelp( "ant", options );
+			System.exit(1);
+		}
+		
+		if(line.hasOption("in")){
+			input = line.getOptionValue("in");
+		}
+		if(line.hasOption("col")){
+			column = line.getOptionValue("col");
+		}
+		if(line.hasOption("m")){
+			matcher = line.getOptionValue("m");
+		}
+		if(line.hasOption("out")){
+			output = line.getOptionValue("out");
+		}
+	}
 }
 
 

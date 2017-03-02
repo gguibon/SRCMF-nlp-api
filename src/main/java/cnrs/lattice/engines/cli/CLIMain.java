@@ -24,7 +24,8 @@ public class CLIMain {
 				+ "eval - mode dedicated to evaluation"
 				+ "\n"
 				+ "fix - launch fixer tools (for now only \"Ignorer lines\")"
-				+ ""
+				+ "\n"
+				+ "subcorpus - mode dedicated to subcorpus extraction"
 				);				
 				
 		options.addOption(help)
