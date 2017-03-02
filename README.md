@@ -1,4 +1,4 @@
-SRCMF-NLP
+SRCMF-NLP API
 ===============
 
 This API regroups different tools to use the SRCMF with Natural Language Processing (NLP) purposes such as :
@@ -17,21 +17,21 @@ mvn clean compile
 mvn package
 ```
 
-Of course, you can also simply use the JAR file : ./srcmf-nlp-1.0.jar
+Of course, you can also simply use the JAR file : ./srcmf-nlp-{version}.jar
 
 # Usage
 
 ```
-java -Xmx[nb RAM]G -jar srcmf-nlp-1.0.jar [command] [subcommands] 
+java -Xmx[nb RAM]G -jar srcmf-nlp-{version}.jar [command] [subcommands] 
 ```
 
 # Help section
 ```
-java -jar srcmf-nlp-1.0.jar
+java -jar srcmf-nlp-{version}.jar
 ```
 or
 ```
-java -jar srcmf-nlp-1.0.jar [commands] -help
+java -jar srcmf-nlp-{version}.jar [commands] -help
 ```
 
 Please note that the -help option will override any commands to prompt the help section, then stop the program.
@@ -39,18 +39,18 @@ Please note that the -help option will override any commands to prompt the help 
 # Usage for training
 
 ```
-java -Xmx6G -jar srcmf-nlp-1.0.jar 1on1 -train [conll path] -wapitimodel [output model path] -matemodel [output model path]
+java -Xmx6G -jar srcmf-nlp-{version}.jar 1on1 -train [conll path] -wapitimodel [output model path] -matemodel [output model path]
 ```
 
 # Usage for testing
 
 ```
-java -Xmx6G -jar srcmf-nlp-1.0.jar 1on1 -test [conll path] -output [file path]
+java -Xmx6G -jar srcmf-nlp-{version}.jar 1on1 -test [conll path] -output [file path]
 ```
 
 # Usage for training and testing in the same time
 ```
-java -Xmx6G -jar srcmf-nlp-1.0.jar 1on1 -train [conll path] -test [conll path] -out [file path]
+java -Xmx6G -jar srcmf-nlp-{version}.jar 1on1 -train [conll path] -test [conll path] -out [file path]
 ```
 Please note models will be stored and used as temporary files !
 
