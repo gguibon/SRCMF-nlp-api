@@ -38,17 +38,27 @@ Please note that the -help option will override any commands to prompt the help 
 
 # Usage for training
 
+You first need to put the file "libwapiti.so" into /lib.
+Then:
+
 ```
 java -Xmx6G -jar srcmf-nlp-{version}.jar 1on1 -train [conll path] -wapitimodel [output model path] -matemodel [output model path]
 ```
 
 # Usage for testing
 
+You first need to put the file "libwapiti.so" into /lib.
+Then:
+
 ```
 java -Xmx6G -jar srcmf-nlp-{version}.jar 1on1 -test [conll path] -output [file path]
 ```
 
 # Usage for training and testing in the same time
+
+You first need to put the file "libwapiti.so" into /lib.
+Then:
+
 ```
 java -Xmx6G -jar srcmf-nlp-{version}.jar 1on1 -train [conll path] -test [conll path] -out [file path]
 ```
