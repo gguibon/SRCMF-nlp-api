@@ -50,7 +50,7 @@ It means that you can add multiple java variables. The most useful one is to set
 java -Djava.library.path=. -Xmx6G -jar srcmf-nlp-<VERSION>.jar 1on1 -wapitimodel <MODEL-PATH> -matemodel <MATEMODEL-PATH> -test <test-FILE-PATH> -out <OUTPUTFILE-PATH>
 ```
 
-# CLI for training
+## CLI for training
 
 You first need to put the file "libwapiti.so" into /lib.
 Then:
@@ -59,7 +59,7 @@ Then:
 java -Xmx6G -jar srcmf-nlp-{version}.jar 1on1 -train [conll path] -wapitimodel [output model path] -matemodel [output model path]
 ```
 
-# CLI for testing
+## CLI for testing
 
 You first need to put the file "libwapiti.so" into /lib.
 Then:
@@ -68,7 +68,7 @@ Then:
 java -Xmx6G -jar srcmf-nlp-{version}.jar 1on1 -test [conll path] -output [file path]
 ```
 
-# CLI for training and testing in the same time
+## CLI for training and testing in the same time
 
 You first need to put the file "libwapiti.so" into /lib.
 Then:
@@ -107,58 +107,7 @@ Of course, you can also simply use the JAR file : ./srcmf-nlp-{version}.jar as a
 
 The src/main directory is organized as follow:
 
-.
-├── engines **where you can find ways to use multiple engines such as wapiti**
-│   ├── cli **useful only for jar execution**
-│   │   ├── CLI1on1.java
-│   │   ├── CLICorpus.java
-│   │   ├── CLIEval.java
-│   │   ├── CLIFix.java
-│   │   ├── CLI.java
-│   │   ├── CLIMain.java
-│   │   └── CLIPrepa.java
-│   ├── eval **classes to evaluate the model performances on accuracy for POS tagging and UAS/LAS for dependency parsing**
-│   │   ├── ConcatVCAuto.java
-│   │   ├── Eval.java
-│   │   ├── MotsInconnus.java
-│   │   ├── MoyenneAccuracy.java
-│   │   └── MoyenneMotsInconnus.java
-│   ├── main **Main accesses. I would recommend to start by using the customizable pipelines from OneOnOne class.**
-│   │   ├── LakmeLaunch.java
-│   │   ├── Main.java
-│   │   ├── OneOnOne.java
-│   │   ├── Prepa.java
-│   │   └── TestsPipeline.java
-│   ├── marmot
-│   │   └── Marmot.java **Not really used for now**
-│   ├── mate **Classes for dependency parsing**
-│   │   ├── DependencyParser.java
-│   │   ├── ExamplePipelineMate.java
-│   │   └── ParseOnly.java
-│   ├── readers **useful classes to represent data**
-│   │   ├── Reader.java
-│   │   └── Writer.java
-│   ├── treetagger **treetagger wrapper for java**
-│   │   └── TreeTagger.java
-│   └── wapiti **Wapiti wrapper classes for JNI wapiti (.so, .dylib,. dll)**
-│       ├── WapitiModel.java
-│       ├── WapitiTrainer.java
-│       └── WapitiWrapper.java
-├── models
-│   └── Word.java
-├── pipelines **Abstraction for the customizable pipeline**
-│   └── Pipeline.java
-└── tools **multiple tools useful for data handling and data checking**
-    ├── corpus
-    │   ├── Corpus.java
-    │   ├── Error.java
-    │   ├── Fixer.java
-    │   └── Format.java
-    └── utils
-        └── Tools.java
-
-14 directories, 34 files
-
+![alt text](https://github.com/gguibon/SRCMF-nlp-api/raw/master/srcmfnlp-api-tree.png "Code organization")
 
 Please note that in version 1.0.5-nockeck, data checks are ignored on OneOnOne pipelines. You can always uncomment them but they were made for specific needs in the SRCMF data format.
 
